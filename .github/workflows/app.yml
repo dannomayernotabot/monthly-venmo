@@ -4,10 +4,10 @@
 name: Run Script
 
 on:
-  schedule:
-    # 4pm UTC on the 7th of the month
-    # https://crontab.guru/#0_16_7_*_*
-    - cron: "0 16 7 * *"
+  schedule:    
+    # 8pm UTC first day of month
+    # https://crontab.guru
+    - cron: "0 20 1 * *"
   workflow_dispatch:
 
 jobs:
@@ -38,7 +38,5 @@ jobs:
           VENMO_ACCESS_TOKEN: ${{ secrets.VENMO_ACCESS_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          K_FRIEND_ID: ${{ secrets.K_FRIEND_ID }}
-          C_FRIEND_ID: ${{ secrets.C_FRIEND_ID }}
-          W_FRIEND_ID: ${{ secrets.W_FRIEND_ID }}
-          J_FRIEND_ID: ${{ secrets.J_FRIEND_ID }}
+          BAY_CLUB_MEMBERS: ${{ secrets.BAY_CLUB_MEMBERS }}
+          SPOTIFY_MEMBERS: ${{ secrets.SPOTIFY_MEMBERS }}

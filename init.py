@@ -1,52 +1,19 @@
-from venmo_api import Client
 from dotenv import load_dotenv
-from notifiers import get_notifier
 from datetime import datetime
 
 from utils import get_env, env_vars, get_month, Venmo, Telegram
 
-def main(now):
-  """
-  The main function which initiates the script.
-  """
-
-  load_dotenv()  # take environment variables from .env.
-  actualVars = []
-  for var in env_vars:
-    actualVars.append(get_env(var))
-
-  access_token, chat_id, bot_token, k_friend_id, c_friend_id, w_friend_id, j_friend_id = actualVars
-
+def send_batch(members, service, amount, venmo, telegram):
   month = get_month(now)
-  venmo = Venmo(access_token)
-  telegram = Telegram(bot_token, chat_id)
+  successfulRequests = []  
+  expectedRequests = len(members)
 
-  friends =[
-    {
-      "name": "KRam",
-      "id": k_friend_id,
-    },
-    {
-      "name": "Chrissy",
-      "id": c_friend_id,
-    },
-    {
-      "name": "Will",
-      "id": w_friend_id,
-    },
-  ]
-
-  successfulRequests = []
-  expectedRequests = len(friends)
-
-  for friend in friends:
-    name = friend["name"]
-    id = friend["id"]
-    description = "Spotify for the month of " + month + "— Sent by Joe's Assistant Efron 🤵🏻‍♂️"
-    amount = 3.00
+  for friend in members:    
+    id = venmo.get_user_id_by_username(friend)
+    description = service + " for the month of " + month + ""    
     message = f"""Good news old sport!
 
-I have successfully requested money from {name}.
+I have successfully requested money from {friend}.
 
 — Efron 🤵🏻‍♂️
     """
@@ -58,6 +25,27 @@ I have successfully requested money from {name}.
     print("✅ Ran script successfully and sent " + str(expectedRequests) + " Venmo requests.")
   else:
     print("❌ Something went wrong. Only sent " + str(len(successfulRequests)) + "/" + str(expectedRequests) + " venmo requests.")
+
+
+
+def main(now):
+  """
+  The main function which initiates the script.
+  """
+
+  load_dotenv()  # take environment variables from .env.
+  actualVars = []
+  for var in env_vars:
+    actualVars.append(get_env(var))
+
+  access_token, chat_id, bot_token, bay_club_members, spotify_members = actualVars
+
+  venmo = Venmo(access_token)
+  telegram = Telegram(bot_token, chat_id)
+
+  send_batch(bay_club_members.split(','), 'Bay Club Membership', 116, venmo, telegram)
+  send_batch(spotify_members.split(','), 'Spotify', 5.34, venmo, telegram)
+  
 
 now = datetime.now()
 main(now)
