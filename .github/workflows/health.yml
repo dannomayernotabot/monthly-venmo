@@ -6,7 +6,7 @@ name: Health Check
 on:
   schedule:
     # Every Sunday around 12pm
-    - cron: "* * * * *"
+    - cron: "45 18 * * 0"
   workflow_dispatch:
 
 jobs:
