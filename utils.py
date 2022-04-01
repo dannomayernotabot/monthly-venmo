@@ -1,4 +1,5 @@
 import os
+from time import sleep
 from venmo_api import Client, PaymentPrivacy
 from notifiers import get_notifier
 
@@ -60,21 +61,46 @@ def get_month(now):
     month = now.strftime("%B")
     return month
 
+def exponential_backoff_retry(timeout, attempt, attempts_remaining, request, args):    
+    if attempts_remaining is 0:
+        print('zero attempts remaining, aborting request')
+        return False
+    try:
+        result = request(*args)
+        return result
+    except Exception as e:
+        print('Request failed due to error. This request has failed ' + str(attempt) + ' times.')
+        print(e)
+        print('Retrying request in ' + str(timeout) + " seconds")
+        sleep(timeout)
+        return exponential_backoff_retry(attempt*attempt, attempt+1, attempts_remaining-1, request, args)
+
 class Venmo:
     def __init__(self, access_token):
         self.client = Client(access_token=access_token)
 
-    def get_user_id_by_username(self, username):
-        user = self.client.user.get_user_by_username(username=username)
+    def get_user_id_by_username(self, username):                
+        user = exponential_backoff_retry(            
+            1,
+            1,
+            5,
+            self.client.user.get_user_by_username,
+            [username],
+        )
         if (user):
             return user.id
         else:
             print("ERROR: user did not comeback. Check username.")
             return None
 
-    def request_money(self, id, amount, description, callback = None):
+    def request_money(self, id, amount, description):
         # Returns a boolean: true if successfully requested
-        return self.client.payment.request_money(amount, description, id, PaymentPrivacy.PUBLIC, None, callback)
+        return exponential_backoff_retry(            
+            1,
+            1,
+            5,
+            self.client.payment.request_money,
+            [amount, description, 'foo', PaymentPrivacy.PRIVATE, None])
 
 class Telegram:
     def __init__(self, bot_token, chat_id):

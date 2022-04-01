@@ -17,14 +17,16 @@ I have successfully requested money from {friend}.
 
 — Efron 🤵🏻‍♂️
     """
-    success = venmo.request_money(id, amount, description, telegram.send_message(message))
+    success = venmo.request_money(id, amount, description)
     if success:
       successfulRequests.append(success)
+      telegram.send_message(message)
 
   if len(successfulRequests) == expectedRequests:
     print("✅ Ran script successfully and sent " + str(expectedRequests) + " Venmo requests.")
   else:
     print("❌ Something went wrong. Only sent " + str(len(successfulRequests)) + "/" + str(expectedRequests) + " venmo requests.")
+    telegram.send_message("❌ Something went wrong. Only sent " + str(len(successfulRequests)) + "/" + str(expectedRequests) + " venmo requests.")
 
 
 
@@ -43,7 +45,7 @@ def main(now):
   venmo = Venmo(access_token)
   telegram = Telegram(bot_token, chat_id)
 
-  send_batch(bay_club_members.split(','), 'Bay Club Membership', 103, venmo, telegram)
+  # send_batch(bay_club_members.split(','), 'Bay Club Membership', 103, venmo, telegram)
   send_batch(spotify_members.split(','), 'Spotify', 5.34, venmo, telegram)
   
 
