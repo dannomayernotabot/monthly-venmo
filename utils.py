@@ -62,7 +62,7 @@ def get_month(now):
     return month
 
 def exponential_backoff_retry(timeout, attempt, attempts_remaining, request, args):    
-    if attempts_remaining is 0:
+    if attempts_remaining == 0:
         print('zero attempts remaining, aborting request')
         return False
     try:
