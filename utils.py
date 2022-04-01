@@ -100,7 +100,7 @@ class Venmo:
             1,
             5,
             self.client.payment.request_money,
-            [amount, description, 'foo', PaymentPrivacy.PRIVATE, None])
+            [amount, description, id, PaymentPrivacy.PRIVATE, None])
 
 class Telegram:
     def __init__(self, bot_token, chat_id):
