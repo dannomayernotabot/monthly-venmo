@@ -45,7 +45,6 @@ def main(now):
   venmo = Venmo(access_token)
   telegram = Telegram(bot_token, chat_id)
 
-  bay_club_members += ',Jack-Ratliffe'
   send_batch(bay_club_members.split(','), 'Bay Club Membership', 96.67, venmo, telegram)
   send_batch(spotify_members.split(','), 'Spotify', 5.34, venmo, telegram)
   
