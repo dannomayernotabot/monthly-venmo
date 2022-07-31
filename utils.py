@@ -15,7 +15,7 @@ def get_env(env):
       return os.getenv(env)
   else:
       print(f"❌ Can't find {env} in environment.")
-      print("   Exiting script. Please add and run again.")
+      print("  Exiting script. Please add and run again.")
       quit()
 
 env_vars = ["VENMO_ACCESS_TOKEN", "TELEGRAM_CHAT_ID", "TELEGRAM_BOT_TOKEN", "BAY_CLUB_MEMBERS", "SPOTIFY_MEMBERS"]
